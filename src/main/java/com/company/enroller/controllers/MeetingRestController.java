@@ -60,7 +60,7 @@ public class MeetingRestController {
     }
 
     // POST http://localhost:8080/meetings
-    @RequestMapping(value = "/{id}", method = RequestMethod.POST)
+    @RequestMapping(value = "/{id}/participants", method = RequestMethod.POST)
     public ResponseEntity<?> addParticipantToMeeting(@PathVariable("id") long id,
                                                      @RequestBody Participant participant) {
         Meeting meeting = meetingService.findById(id);
