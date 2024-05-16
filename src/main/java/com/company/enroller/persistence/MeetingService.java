@@ -45,12 +45,6 @@ public class MeetingService {
 		transaction.commit();
 	}
 
-	public void addParticipant(Participant participant) {
-		Transaction transaction = this.connector.getSession().beginTransaction();
-		connector.getSession().save(participant);
-		transaction.commit();
-	}
-
 	public void update(Meeting meeting) {
 		Transaction transaction = this.session.beginTransaction();
 		this.session.merge(meeting);
