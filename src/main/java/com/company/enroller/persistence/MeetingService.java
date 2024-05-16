@@ -51,24 +51,9 @@ public class MeetingService {
 		transaction.commit();
 	}
 
-	public void updateTitle(Meeting meeting, String title) {
-		Transaction transaction = this.connector.getSession().beginTransaction();
-		meeting.setTitle(title);
-		session.save(meeting);
-		transaction.commit();
-	}
-
-	public void updateDescription(Meeting meeting, String description) {
-		Transaction transaction = this.connector.getSession().beginTransaction();
-		meeting.setDescription(description);
-		session.save(meeting);
-		transaction.commit();
-	}
-
-	public void updateDate(Meeting meeting, String date) {
-		Transaction transaction = this.connector.getSession().beginTransaction();
-		meeting.setDate(date);
-		session.save(meeting);
+	public void update(Meeting meeting) {
+		Transaction transaction = this.session.beginTransaction();
+		this.session.merge(meeting);
 		transaction.commit();
 	}
 }
