@@ -32,22 +32,54 @@ public class MeetingService {
 		Meeting meeting = (Meeting) connector.getSession().get(Meeting.class, id);
 		return meeting;
 	}
+	public Collection<Meeting> findMeetings(String title, String description, Participant participant, String sortMode) {
+		String hql = "FROM Meeting as meeting WHERE title LIKE :title AND description LIKE :description ";
+		if (participant!=null) {
+			hql += " AND :participant in elements(participants)";
+		}
+		if (sortMode.equals("title")) {
+			hql += " ORDER BY title";
+		}
+		Query query = this.session.createQuery(hql);
+		query.setParameter("title", "%" + title + "%").setParameter("description", "%" + description + "%");
+		if (participant!=null) {
+			query.setParameter("participant", participant);
+		}
 
-	public void add(Meeting meeting) {
-		Transaction transaction = this.connector.getSession().beginTransaction();
+		return query.list();
+	}
+
+	public void create(Meeting meeting) {
+		Transaction transaction = connector.getSession().beginTransaction();
 		connector.getSession().save(meeting);
 		transaction.commit();
 	}
 
-	public void remove(Meeting meeting) {
-		Transaction transaction = this.connector.getSession().beginTransaction();
+	public void deleteMeeting(Meeting meeting) {
+		Transaction transaction = connector.getSession().beginTransaction();
 		connector.getSession().delete(meeting);
 		transaction.commit();
 	}
 
-	public void update(Meeting meeting) {
-		Transaction transaction = this.session.beginTransaction();
-		this.session.merge(meeting);
+	public void updateMeeting(Meeting meetingUpdate) {
+		Transaction transaction = connector.getSession().beginTransaction();
+		connector.getSession().merge(meetingUpdate);
+		transaction.commit();
+	}
+
+	public void addParticipant(Long id, Participant participant) {
+		Meeting meeting = findById(id);
+		meeting.addParticipant(participant);
+		Transaction transaction = connector.getSession().beginTransaction();
+		connector.getSession().update(meeting);
+		transaction.commit();
+	}
+
+	public void removeParticipant(Long id, Participant participant) {
+		Meeting meeting = findById(id);
+		meeting.removeParticipant(participant);
+		Transaction transaction = connector.getSession().beginTransaction();
+		connector.getSession().update(meeting);
 		transaction.commit();
 	}
 }
